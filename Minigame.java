@@ -1,8 +1,8 @@
 import java.util.*;
 
 public class Minigame{
-    char[][] board = {{' ', ' ', ' '}, {' ', ' ', ' ',}, {' ',' ',' ',}};
-    char player = 'X';
+    char[][] board = {{' ', ' ', ' '}, {' ', ' ', ' ',}, {' ',' ',' ',}}; //instance scope variable
+    char player = 'X'; //instance scope variable
     public void printBoard(){
         System.out.println("Board: ");
         for(int row = 0; row < board.length; row++){
