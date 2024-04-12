@@ -44,7 +44,7 @@ public class Minigame{
             board[row][column] = player;
         }else{
             System.out.println("Entered Column and row already has value in it, please enter different row and column value");
-            turn();
+            turn(); //recursive method
         }
     }
     public void switchPlayer(){
