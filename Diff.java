@@ -5,10 +5,36 @@ public class Diff {
     ArrayList<Integer> last_idx = new ArrayList<>();
     ArrayList<Integer> diff = new ArrayList<>();
     ArrayList<Integer> prevDiff = new ArrayList<>();
+    int diffCout = 1;
+    Scanner input = new Scanner(System.in);
     
-    public void getList(int n){
-        Scanner input = new Scanner(System.in);
-        boolean removeSuccess = false;
+    public void printIntList(ArrayList<Integer> n){
+        System.out.print("List: ");
+        for (Integer i : n) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+    }
+    
+    
+    public void statusCheck(){
+        input.nextLine();
+        do{
+          System.out.println("Enter \"y\" to continue, \"n\" to exit.");  
+          String option = input.next().toLowerCase().trim();
+          if(!option.equals("y") && !option.equals("n")){
+            System.out.println("invalid input");
+            continue;
+          }else if(option.equals("y")){
+            arr.clear();
+            getList();
+          }else{
+            System.out.println("Bye!");
+            System.exit(0);
+          }
+        }while(true);     
+    } 
+    public void getList(){
             do{
                 int idx = 0;
                 System.out.println("Enter the Integer pattern to be solved, Enter q when done, Enter remove to \"remove\" an element.");
@@ -22,47 +48,74 @@ public class Diff {
                             continue;
                         }
                         System.out.print("Please enter index of element to be removed: ");
-                        if(!input.hasNextInt()){
-                            while(!input.hasNextInt()){
-                                    System.out.print("Please enter index of element to be removed: ");
-                                    input.next();
+                            if(!input.hasNextInt()){
+                                while(!input.hasNextInt()){
+                                        System.out.print("Please enter index of element to be removed: ");
+                                        input.next();
+                                }
+                                idx = input.nextInt();
                             }
                             idx = input.nextInt();
                             if(idx > arr.size() || idx < 0){
                                 System.out.println("index entered out of bounds");
-                                System.out.println("Please enter index of element to be removed: ");
+                                System.out.print("Please enter index of element to be removed: ");
                                 while(!input.hasNextInt()){
-                                        System.out.println("Please enter index of element to be removed: ");
+                                        System.out.print("Please enter index of element to be removed: ");
                                         input.next();
                                 }
-                                idx = input.nextInt();
-                            }                       
-                            }
+                                idx = input.nextInt(); 
+                            } 
                                 input.nextLine();
                                 arr.remove(idx);
-                                System.out.print("List: ");
-                                for(int i : arr){
-                                System.out.print(i + " ");
+                                printIntList(arr);
+                                continue;                      
+                            
+                        }else if(op.equals("edit")){
+                            if(arr.size() <= 0){
+                                System.out.println("No elements in list!");
+                            }
+                            System.out.print("enter element index to be edited: ");
+                            while (!input.hasNextInt()) {
+                            System.out.println("Please enter a number!"); 
+                            input.next();
+                            }
+                            idx = input.nextInt();
+                            if(idx > arr.size() || idx < 0){
+                                System.out.println("Entered index out of bounds!");
+                                System.out.print("Enter element index to be edited: ");
+                                while(!input.hasNextInt()){
+                                    System.out.print("Please enter a number!: ");
+                                    input.next();
                                 }
-                                System.out.println(); 
-                                removeSuccess = true;
+                                idx = input.nextInt();
+                            }
+                                System.out.print("Enter value: ");
+                                while (!input.hasNextInt()) {
+                                    System.out.print("Please enter a number!: ");
+                                    input.next();
+                                }
+                                int value = input.nextInt();
+                                arr.set(idx, value);
+                                printIntList(arr);
+                                continue;
+                            
                         }
-                    }else{
+                }else{
                     arr.add(input.nextInt());
-                    System.out.print("List: ");
-                    for(int i : arr){
-                        System.out.print(i + " ");
-                    }
+                    printIntList(arr);
                 }
                 input.nextLine();
-                System.out.println();
-            }while(true);
-        }   
+            
+        }while(true);      
+    }
 
         
     
 
     public int findNextTerm(ArrayList<Integer> n) {
+        if(diff.size() <= 1 && diffCout > 1){
+            throw new ArithmeticException("Next term cant be found");
+        }
         if (n.get(0) == n.get(1)) {
             if(last_idx.size() <= 0){
                 return arr.get(0);
@@ -80,22 +133,33 @@ public class Diff {
                 diff.add(prevDiff.get(j) - prevDiff.get(i)); // Initialize and add the difference to the list
             }
             last_idx.add(diff.get(diff.size() - 1));
-            for (Integer i : diff) {
-                System.out.print(i + " ");
+            for(int i = diffCout - 1; i < diffCout; i++){
+                System.out.print(diffCout + " difference ");
+                if(diffCout >= 2){
+                    int tmp = 0;
+                    do{
+                        System.out.print(" ");
+                        tmp++;
+                    }while(tmp < diffCout);
+                }
+                for (Integer j : diff) {
+                    System.out.print(" " + j + "  ");
+                }
+                System.out.println();
             }
-            System.out.println();
+            diffCout++;
             return findNextTerm(diff); // Return the result of the recursive call
         }
     }
 
     public static void main(String[] args) {
         Diff obj = new Diff();
-        obj.getList(0);
-        arr.set(arr.size() - 1, obj.findNextTerm(arr));
+        obj.getList();
+        arr.add(obj.findNextTerm(arr));
         System.out.println("Next term: " + arr.get(arr.size() - 1));
-        for (Integer i : arr) {
-            System.out.print(i + " ");
-        }
+        obj.printIntList(arr);
+        System.out.println();
+        obj.statusCheck();
     }
 }
 
