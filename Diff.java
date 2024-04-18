@@ -19,15 +19,20 @@ public class Diff {
     
     public void statusCheck(){
         input.nextLine();
+        String option;
         do{
           System.out.println("Enter \"y\" to continue, \"n\" to exit.");  
-          String option = input.next().toLowerCase().trim();
+            option = input.next().toLowerCase().trim();
           if(!option.equals("y") && !option.equals("n")){
             System.out.println("invalid input");
             continue;
           }else if(option.equals("y")){
+            diffCout = 1;
             arr.clear();
             getList();
+            findNextTerm(arr);
+            System.out.println("Next term: " + arr.get(arr.size() - 1));
+            printIntList(arr);
           }else{
             System.out.println("Bye!");
             System.exit(0);
@@ -37,10 +42,13 @@ public class Diff {
     public void getList(){
             do{
                 int idx = 0;
-                System.out.println("Enter the Integer pattern to be solved, Enter q when done, Enter remove to \"remove\" an element.");
+                System.out.println("Enter the Integer pattern to be solved, Enter q when done, Enter remove to \"remove\" an element, Enter \"quit\" to quit the program.");
                 if(!input.hasNextInt()){
                     String op = input.next().trim().toLowerCase();
-                    if(op.equals("q")){
+                    if(op.equals("quit")){
+                        System.out.println("Bye!");
+                        System.exit(1);
+                    }else if(op.equals("q")){
                         break;
                     }else if(op.equals("remove")){
                         if(arr.size() == 0){
@@ -80,7 +88,7 @@ public class Diff {
                             input.next();
                             }
                             idx = input.nextInt();
-                            if(idx > arr.size() || idx < 0){
+                            while(idx >= arr.size() || idx < 0){
                                 System.out.println("Entered index out of bounds!");
                                 System.out.print("Enter element index to be edited: ");
                                 while(!input.hasNextInt()){
@@ -113,16 +121,27 @@ public class Diff {
     
 
     public int findNextTerm(ArrayList<Integer> n) {
+        boolean c = false;
         if(diff.size() <= 1 && diffCout > 1){
             throw new ArithmeticException("Next term cant be found");
         }
-        if (n.get(0) == n.get(1)) {
+        if(n.get(0) == n.get(1)){
+            for(int i = 0; i < diff.size(); i++){
+                if(diff.get(0) == diff.get(i)){
+                    c = true;
+                }else{
+                    c = false;
+                }
+            }
+        }
+        if (c == true) {
             if(last_idx.size() <= 0){
                 return arr.get(0);
             }
             Collections.sort(last_idx);
             for (int i = 1; i < last_idx.size(); i++) {
                 last_idx.set(0, last_idx.get(i) + last_idx.get(0));
+                
             }
             return arr.get(arr.size() - 1) + last_idx.get(0);
         } else {
