@@ -1,6 +1,7 @@
 import java.util.*;
 
 public class Diff {
+    ArrayList <ArrayList<Integer>> diffList = new ArrayList<>();
     static ArrayList<Integer> arr = new ArrayList<>();
     ArrayList<Integer> last_idx = new ArrayList<>();
     ArrayList<Integer> diff = new ArrayList<>();
@@ -14,6 +15,26 @@ public class Diff {
             System.out.print(i + " ");
         }
         System.out.println();
+    }
+    public void printDiffList(ArrayList<ArrayList<Integer>> n){
+        System.out.println("       List:"+arr);
+        int maxWidth = n.get(0).size() * 2 - 1;
+        for (int i = 0; i < n.size(); i++) {
+            System.out.print(i + 1 + " difference ");
+            List<Integer> row = n.get(i);
+
+            int leadingSpaces = (maxWidth - row.size() * 2 + 1) / 2;
+
+            for (int j = 0; j < leadingSpaces; j++) {
+                System.out.print(" ");
+            }
+
+            for (Integer num : row) {
+                System.out.print(num + " ");
+            }
+
+            System.out.println();
+        } 
     }
     
     
@@ -29,10 +50,13 @@ public class Diff {
           }else if(option.equals("y")){
             diffCout = 1;
             arr.clear();
+            diffList.clear();
+            last_idx.clear();
             getList();
-            findNextTerm(arr);
+            arr.add(findNextTerm(arr));
             System.out.println("Next term: " + arr.get(arr.size() - 1));
             printIntList(arr);
+            printDiffList(diffList);
           }else{
             System.out.println("Bye!");
             System.exit(0);
@@ -49,6 +73,7 @@ public class Diff {
                         System.out.println("Bye!");
                         System.exit(1);
                     }else if(op.equals("q")){
+                        //diffList.add(arr);
                         break;
                     }else if(op.equals("remove")){
                         if(arr.size() == 0){
@@ -122,7 +147,7 @@ public class Diff {
 
     public int findNextTerm(ArrayList<Integer> n) {
         boolean c = false;
-        if(diff.size() <= 1 && diffCout > 1){
+        if(diff.size() <= 1 && diffCout > 1 && diff.get(0) == Integer.MIN_VALUE){
             throw new ArithmeticException("Next term cant be found");
         }
         if(n.get(0) == n.get(1)){
@@ -139,34 +164,48 @@ public class Diff {
                 return arr.get(0);
             }
             Collections.sort(last_idx);
+            for (int i = diffList.size() - 2; i >= 0; i--) {
+            List<Integer> currentList = diffList.get(i);
+            List<Integer> nextList = diffList.get(i + 1);
+
+            int lastElementOfCurrentList = currentList.get(currentList.size() - 1);
+            int lastElementOfNextList = nextList.get(nextList.size() - 1);
+
+            int sum = lastElementOfCurrentList + lastElementOfNextList;
+
+            currentList.add(sum);
+            }
+
             for (int i = 1; i < last_idx.size(); i++) {
                 last_idx.set(0, last_idx.get(i) + last_idx.get(0));
-                
             }
+            
             return arr.get(arr.size() - 1) + last_idx.get(0);
         } else {
             prevDiff.clear();
             prevDiff.addAll(n);
             diff.clear();
             for (int i = 0, j = 1; j < prevDiff.size(); i++, j++) {
-                diff.add(prevDiff.get(j) - prevDiff.get(i)); // Initialize and add the difference to the list
+                diff.add(prevDiff.get(j) - prevDiff.get(i)); 
             }
             last_idx.add(diff.get(diff.size() - 1));
-            for(int i = diffCout - 1; i < diffCout; i++){
-                System.out.print(diffCout + " difference ");
-                if(diffCout >= 2){
-                    int tmp = 0;
-                    do{
-                        System.out.print(" ");
-                        tmp++;
-                    }while(tmp < diffCout);
-                }
-                for (Integer j : diff) {
-                    System.out.print(" " + j + "  ");
-                }
-                System.out.println();
-            }
+            /* 
+                for(int i = diffCout - 1; i < diffCout; i++){
+                    System.out.print(diffCout + " difference ");
+                    if(diffCout >= 2){
+                        int tmp = 0;
+                        do{
+                            System.out.print(" ");
+                            tmp++;
+                        }while(tmp < diffCout);
+                    }
+                    for (Integer j : diff) {
+                        System.out.print(" " + j + "  ");
+                    }
+                    System.out.println();
+                }*/
             diffCout++;
+            diffList.add(new ArrayList<>(diff));
             return findNextTerm(diff); // Return the result of the recursive call
         }
     }
@@ -177,7 +216,7 @@ public class Diff {
         arr.add(obj.findNextTerm(arr));
         System.out.println("Next term: " + arr.get(arr.size() - 1));
         obj.printIntList(arr);
-        System.out.println();
+        obj.printDiffList(obj.diffList);
         obj.statusCheck();
     }
 }
