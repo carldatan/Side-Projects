@@ -170,7 +170,8 @@ public class GamePanel extends JPanel implements ActionListener {
 	public void gameOver(Graphics g) {
 		gameOverHandled = true;
 		highScoreManager.addHighScore(name, applesEaten);
-		System.out.println(highScoreManager.getScores());
+		System.out.println("HighScoreManager instance: " + highScoreManager);
+		System.out.println("Scores after adding: " + highScoreManager.getScores());
 		Panel panel = new Panel();
 		panel.setLayout(null);
 		// panel.setBackground(Color.white);
@@ -221,7 +222,6 @@ public class GamePanel extends JPanel implements ActionListener {
 		parent.add(new GameMenu(highScoreManager));
 		parent.revalidate();
 		parent.repaint();
-
 	}
 
 	@Override

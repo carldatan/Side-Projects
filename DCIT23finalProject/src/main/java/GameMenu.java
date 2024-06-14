@@ -10,9 +10,10 @@ public class GameMenu extends Panel implements ActionListener {
 	static final int SCREEN_HEIGHT = 600;
 	Color color;
 	Random random = new Random();
-	HighScoreManager highScoresManager = new HighScoreManager();
+	private HighScoreManager highScoresManager;
 
 	GameMenu(HighScoreManager highScoreManager) {
+		this.highScoresManager = highScoreManager;
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		this.setBackground(Color.black);
 		this.setFocusable(true);
@@ -28,7 +29,7 @@ public class GameMenu extends Panel implements ActionListener {
 		Button highScoreBtn = new Button("High Scores");
 		Panel panel = new Panel();
 		panel.setLayout(null);
-		panel.setBackground(Color.white);
+		// panel.setBackground(Color.white);
 		panel.setBounds(200, 350, 200, 200);
 		newGameBtn.setBounds(50, 10, 100, 40);
 		newGameBtn.setBackground(Color.red);
