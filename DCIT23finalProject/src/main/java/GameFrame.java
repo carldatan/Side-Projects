@@ -1,10 +1,13 @@
+import java.awt.BorderLayout;
 import java.awt.Frame;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 public class GameFrame extends Frame implements WindowListener {
+	HighScoreManager highScoreManager = new HighScoreManager();
+
 	GameFrame() {
-		this.add(new GamePanel());
+		this.add(new GameMenu(highScoreManager), BorderLayout.CENTER);
 		this.setTitle("Snake");
 		addWindowListener(this);
 		this.setVisible(true);
