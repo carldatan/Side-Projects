@@ -11,8 +11,10 @@ public class GameMenu extends Panel implements ActionListener {
 	Color color;
 	Random random = new Random();
 	private HighScoreManager highScoresManager;
+	GameDifficulty gameDifficulty;
 
-	GameMenu(HighScoreManager highScoreManager) {
+	GameMenu(HighScoreManager highScoreManager, GameDifficulty gameDifficulty) {
+		this.gameDifficulty = gameDifficulty;
 		this.highScoresManager = highScoreManager;
 		this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
 		this.setBackground(Color.black);
@@ -46,6 +48,7 @@ public class GameMenu extends Panel implements ActionListener {
 		optBtn.setFont(new Font("Hack", Font.BOLD, 16));
 		optBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				switchToOptions();
 			}
 		});
 		exitBtn.setBounds(50, 160, 100, 40);
@@ -89,7 +92,7 @@ public class GameMenu extends Panel implements ActionListener {
 	public void switchToNewGame() {
 		Container parent = this.getParent();
 		parent.remove(this);
-		GamePanel gamePanel = new GamePanel(highScoresManager);
+		GamePanel gamePanel = new GamePanel(highScoresManager, gameDifficulty);
 		parent.add(gamePanel);
 		parent.validate();
 		gamePanel.requestFocusInWindow();
@@ -98,18 +101,21 @@ public class GameMenu extends Panel implements ActionListener {
 
 	public void switchToOptions() {
 		Container parent = this.getParent();
+		if (parent == null) {
+			return;
+		}
 		parent.remove(this);
-		GamePanel gamePanel = new GamePanel(highScoresManager);
-		parent.add(gamePanel);
+		GameOptions newgameOptions = new GameOptions(highScoresManager, gameDifficulty);
+		parent.add(newgameOptions);
 		parent.validate();
-		gamePanel.requestFocusInWindow();
+		newgameOptions.requestFocusInWindow();
 		parent.repaint();
 	}
 
 	public void switchToLeaderboards() {
 		Container parent = this.getParent();
 		parent.remove(this);
-		GameLeaderBoards gameLeaderBoards = new GameLeaderBoards(highScoresManager);
+		GameLeaderBoards gameLeaderBoards = new GameLeaderBoards(highScoresManager, gameDifficulty);
 		parent.add(gameLeaderBoards);
 		parent.validate();
 		gameLeaderBoards.requestFocusInWindow();
